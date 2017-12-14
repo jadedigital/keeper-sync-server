@@ -11,6 +11,7 @@ var oauthSignature = require('oauth-signature')
 var app = express()
 app.use(cors())
 app.use(bodyParser.json())
+app.set('port', process.env.PORT || config.port)
 // app.use(allowCrossDomain);
 
 app.get('/', function (req, res) {
@@ -52,7 +53,9 @@ app.post('/auth/:provider', function(req, res){
   }
 });
 
-app.listen(4000);
+app.listen(app.get('port'), function() {
+    console.log('running on port', app.get('port'))
+})
 
 function allowCrossDomain(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
