@@ -28,7 +28,7 @@ app.get('/auth/yahoo/callback', function(req, res) {
       json: true,
       form: {
         code: req.query.code,
-        redirect_uri: redirectUri,
+        redirect_uri: 'https://keepersync.com/auth/yahoo/callback',
         grant_type: 'authorization_code'
       }
     };
