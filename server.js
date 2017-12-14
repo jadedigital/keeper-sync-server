@@ -19,9 +19,6 @@ app.get('/', function (req, res) {
 
 app.post('/auth/:provider', function(req, res){
   switch(req.params.provider) {
-    case 'github':
-      githubAuth(req, res)
-      break
     case 'facebook':
       facebookAuth(req, res)
       break
@@ -81,26 +78,6 @@ function registerAuth(req, res) {
     email: 'john.doe@domain.com',
     created_at: new Date(),
     access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NSIsIm5hbWUiOiJKb2huIFJlZ2lzdGVyIERvZSIsImFkbWluIjp0cnVlfQ.zTR57xocFkGp2UdFwBLk1cZUeqgSujvTqVAFagBlU4I'
-  })
-}
-
-function githubAuth(req, res) {
-  Axios.post('https://github.com/login/oauth/access_token', {
-    client_id: config.auth.github.clientId,
-    client_secret: config.auth.github.clientSecret,
-    code: req.body.code,
-    redirect_uri: req.body.redirectUri,
-    state: req.body.state,
-    grant_type: 'authorization_code'
-  }, { 'Content-Type': 'application/json' }).then(function (response) {
-    var responseJson = parseQueryString(response.data)
-    if (responseJson.error) {
-      res.status(500).json({ error: responseJson.error })
-    } else {
-      res.json(responseJson)
-    }
-  }).catch(function (err) {
-    res.status(500).json(err)
   })
 }
 
@@ -258,21 +235,6 @@ function liveAuth(req, res) {
   })
 }
 
-Request({
-    method: 'post',
-    url: 'https://bitbucket.org/site/oauth2/access_token',
-    form: {
-      code: req.body.code,
-      client_id: config.auth.bitbucket.clientId,
-      client_secret: config.auth.bitbucket.clientSecret,
-      redirect_uri: req.body.redirectUri,
-      grant_type: 'authorization_code'
-    },
-    headers: {
-      'content-type': 'application/x-www-form-urlencoded'
-    }
-  }, function (err, response, body) {
-
 function yahooAuth(req, res) {
     Request({
       method: 'post',
@@ -366,18 +328,4 @@ function twitterAuth(req, res) {
       }
     })
   }
-}
-
-function parseQueryString(str) {
-  let obj = {};
-  let key;
-  let value;
-  (str || '').split('&').forEach((keyValue) => {
-    if (keyValue) {
-      value = keyValue.split('=');
-      key = decodeURIComponent(value[0]);
-      obj[key] = (!!value[1]) ? decodeURIComponent(value[1]) : true;
-    }
-  });
-  return obj;
 }
