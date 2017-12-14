@@ -23,7 +23,7 @@ app.get('/auth/yahoo/callback', function(req, res) {
   
     var options = {
       url: accessTokenUrl,
-      headers: { Authorization: 'Basic ' + new Buffer(clientId + ':' + clientSecret).toString('base64') },
+      headers: { Authorization: 'Basic ' + new Buffer(config.auth.yahoo.clientId + ':' + config.auth.yahoo.clientSecret).toString('base64') },
       rejectUnauthorized: false,
       json: true,
       form: {
