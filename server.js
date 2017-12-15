@@ -133,13 +133,12 @@ app.get('/leagues', function(req, res) {
 
 app.get('/rosters', function(req, res) {
   var accessToken = req.query.accessToken
-  var team_keys = req.query.teamKey
+  var team_key = req.query.team_key
 
   yf.setUserToken(accessToken)
 
-  yf.teams.fetch(
-    team_keys,
-    'roster',
+  yf.team.roster(
+    team_key,
     function(err, data) {
       if (err)
         console.log('Oops: ', err)
