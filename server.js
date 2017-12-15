@@ -87,7 +87,7 @@ app.get('/auth/yahoo/callback', function(req, res) {
         accessToken: accessToken
       };
       req.session.user = user;
-      res.redirect('http://mylocalwebsite.net/' + accessToken);
+      res.redirect('http://mylocalwebsite.net/#/?accessToken=' + accessToken);
 
     });
   });
