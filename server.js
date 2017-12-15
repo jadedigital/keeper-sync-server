@@ -287,6 +287,7 @@ function liveAuth(req, res) {
 }
 
 function yahooAuth(req, res) {
+  console.log('you are here')
     Request({
       method: 'post',
       url: 'https://api.login.yahoo.com/oauth2/get_token',
