@@ -77,7 +77,7 @@ app.get('/auth/yahoo/callback', function(req, res) {
 
     // 3. Create a new user account or return an existing one
 
-      var user = {
+      var userParams = qs.stringify({
         guid: guid,
         //email: body.profile.emails[0].handle,
         profileImage: body.profile.image.imageUrl,
@@ -85,10 +85,9 @@ app.get('/auth/yahoo/callback', function(req, res) {
         lastName: body.profile.familyName,
         displayName: body.profile.nickname,
         accessToken: accessToken
-      };
-      req.session.user = user;
-      res.redirect('http://mylocalwebsite.net/#/callback/?user=' + user);
+      })
+      res.redirect('http://mylocalwebsite.net/#/callback/?' + userParams);
 
-    });
-  });
-});
+    })
+  })
+})
