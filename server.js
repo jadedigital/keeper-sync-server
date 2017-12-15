@@ -130,3 +130,22 @@ app.get('/leagues', function(req, res) {
         }
       )
 })
+
+app.get('/rosters', function(req, res) {
+  var accessToken = req.query.accessToken
+  var team_keys = req.query.teamKey
+
+  yf.setUserToken(accessToken)
+
+  yf.teams.fetch(
+    team_keys,
+    'roster',
+    function(err, data) {
+      if (err)
+        console.log('Oops: ', err)
+      else
+        rosterData = data
+        return res.json(rosterData)
+        }
+      )
+})
