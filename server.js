@@ -18,7 +18,7 @@ app.get('/', function (req, res) {
   res.send('vue-authenticate')
 })
 
-app.post('/auth/yahoo/callback', function(req, res) {
+app.get('/auth/yahoo/callback', function(req, res) {
     var accessTokenUrl = 'https://api.login.yahoo.com/oauth2/get_token';
   
     var options = {
