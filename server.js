@@ -96,8 +96,10 @@ app.get('/auth/yahoo/callback', function(req, res) {
 })
 
 app.get('/teams', function(req, res) {
+  console.log('you are here')
   var accessToken = req.query.accessToken
   var game_key = 'nfl'
+  console.log(accessToken)
 
   yf.setUserToken(accessToken);
 
