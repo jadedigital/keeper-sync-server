@@ -304,12 +304,13 @@ function yahooAuth(req, res) {
       try {
         if (!err && response.statusCode === 200) {
           var responseJson = JSON.parse(body)
-          console.log('test')
           res.json({access_token: 'test'})
         } else {
+          console.log('test')
           res.status(response.statusCode).json(err)
         }
       } catch (e) {
+        console.log('test2')
         res.status(500).json(err || e)
       }
     })
