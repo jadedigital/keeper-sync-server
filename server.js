@@ -8,7 +8,7 @@ var OAuth = require('oauth')
 var timestamp = require('unix-timestamp')
 var oauthSignature = require('oauth-signature')
 var passport = require('passport')
-var yahooStrategy = require('passport-yahoo-oauth2').Strategy
+var yahooStrategy = require('passport-yahoo-oauth2').OAuth2Strategy
 
 var app = express()
 app.use(cors())
@@ -38,6 +38,7 @@ app.post('/auth/yahoo', passport.authenticate('yahoo'))
 app.get('/auth/yahoo/callback',
     passport.authenticate('yahoo'),
     function (req, res) {
-        res.end(popupTools.popupResponse(req.user))
+        // res.end(popupTools.popupResponse(req.user))
+        res.redirect('http://mylocalwebsite.net')
     }
 )
