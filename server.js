@@ -19,7 +19,7 @@ app.get('/', function (req, res) {
 })
 
 app.get('/auth/yahoo/callback', function(req, res) {
-    var accessTokenUrl = 'https://api.login.yahoo.com/oauth2/get_token';
+    var accessTokenUrl = 'https://api.login.yahoo.com/oauth2/get_token'
   
     var options = {
       url: accessTokenUrl,
@@ -31,20 +31,20 @@ app.get('/auth/yahoo/callback', function(req, res) {
         redirect_uri: 'https://keepersync.com/auth/yahoo/callback',
         grant_type: 'authorization_code'
       }
-    };
+    }
   
     // 1. Exchange authorization code for access token.
     Request.post(options, function(err, response, body) {
-      var guid = body.xoauth_yahoo_guid;
-      var accessToken = body.access_token;
-      var socialApiUrl = 'https://social.yahooapis.com/v1/user/' + guid + '/profile?format=json';
+      var guid = body.xoauth_yahoo_guid
+      var accessToken = body.access_token
+      var socialApiUrl = 'https://social.yahooapis.com/v1/user/' + guid + '/profile?format=json'
   
       var options = {
         url: socialApiUrl,
         headers: { Authorization: 'Bearer ' + accessToken },
         rejectUnauthorized: false,
         json: true
-      };
+      }
   
       // 2. Retrieve profile information about the current user.
       Request.get(options, function(err, response, body) {
@@ -59,12 +59,12 @@ app.get('/auth/yahoo/callback', function(req, res) {
           lastName: body.profile.familyName,
           displayName: body.profile.nickname,
           accessToken: accessToken
-        };
-        res.json(user);
+        }
+        res.json({access_token: accessToken, profile: user})
   
-      });
-    });
-  });
+      })
+    })
+  })
 
 app.post('/auth/:provider', function(req, res){
   switch(req.params.provider) {
