@@ -110,7 +110,7 @@ app.get('/teams', function(req, res) {
         console.log('Oops: ', err);
       else
         leagueData = data
-        return res.json('fantasy', { user: req.session.user, leagueData: leagueData });
+        return res.json({ user: req.session.user, leagueData: leagueData });
         }
       );      
 
