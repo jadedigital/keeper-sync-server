@@ -9,7 +9,10 @@ var config = require('./config.json')
 var OAuth = require('oauth')
 var timestamp = require('unix-timestamp')
 var oauthSignature = require('oauth-signature')
+var fantasySports = require('yahoo-fantasy-without-auth')
 
+
+var yf = new fantasySports()
 var app = express()
 app.use(cors())
 app.use(bodyParser.json())
@@ -91,3 +94,21 @@ app.get('/auth/yahoo/callback', function(req, res) {
     })
   })
 })
+
+app.get('/teams', function(req, res) {
+  var accessToken = req.query.accessToken
+  var game_key = 'nfl'
+
+  yf.setUserToken(accessToken);
+
+  yf.user.teams(
+    game_key,
+    function(err, data) {
+      if (err)
+        console.log('Oops: ', err);
+      else
+        return res.json('fantasy', { user: req.session.user, leagueData: leagueData });
+        }
+      );      
+
+});
