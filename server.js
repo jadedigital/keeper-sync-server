@@ -34,7 +34,7 @@ passport.use(new yahooStrategy({
   })
 }))
 
-app.post('/auth/yahoo', passport.authenticate('yahoo'))
+app.get('/auth/yahoo', passport.authenticate('yahoo'))
 app.get('/auth/yahoo/callback',
     passport.authenticate('yahoo'),
     function (req, res) {
