@@ -1,4 +1,5 @@
 var express = require('express')
+var session = require('express-session')
 var bodyParser = require('body-parser')
 var Axios = require('axios')
 var Request = require('request')
@@ -7,14 +8,16 @@ var config = require('./config.json')
 var OAuth = require('oauth')
 var timestamp = require('unix-timestamp')
 var oauthSignature = require('oauth-signature')
-var passport = require('passport')
-var yahooStrategy = require('passport-yahoo-oauth2').OAuth2Strategy
 
 var app = express()
 app.use(cors())
 app.use(bodyParser.json())
+app.use(session({ secret: 'SECRET', resave: false, saveUninitialized: true}))
 app.set('port', process.env.PORT || config.port)
 // app.use(allowCrossDomain);
+var clientId = config.auth.yahoo.clientId
+var clientSecret = config.auth.yahoo.clientSecret
+var redirectUri = 'https://keepersync.com/auth/yahoo/callback'
 
 app.get('/', function (req, res) {
   res.send('keeperSync authentication server')
@@ -24,21 +27,67 @@ app.listen(app.get('port'), function() {
     console.log('running on port', app.get('port'))
 })
 
-passport.use(new yahooStrategy({
-    consumerKey: config.auth.yahoo.clientId,
-    consumerSecret: config.auth.yahoo.clientSecret,
-    callbackURL: '/auth/yahoo/callback',
-}, function (token, tokenSecret, profile, done) {
-  User.findOrCreate({ yahooId: profile.id }, function (err, user) {
-    return done(err, user)
-  })
-}))
 
-app.get('/auth/yahoo', passport.authenticate('yahoo'))
-app.get('/auth/yahoo/callback',
-    passport.authenticate('yahoo'),
-    function (req, res) {
-        // res.end(popupTools.popupResponse(req.user))
-        res.redirect('http://mylocalwebsite.net')
+app.get('/auth/yahoo', function(req, res) {
+  var authorizationUrl = 'https://api.login.yahoo.com/oauth2/request_auth';
+
+  var queryParams = qs.stringify({
+    client_id: clientId,
+    redirect_uri: redirectUri,
+    response_type: 'code'
+  });
+
+  res.redirect(authorizationUrl + '?' + queryParams);
+});
+
+
+// GET /auth/yahoo/callback
+
+app.get('/auth/yahoo/callback', function(req, res) {
+  var accessTokenUrl = 'https://api.login.yahoo.com/oauth2/get_token';
+
+  var options = {
+    url: accessTokenUrl,
+    headers: { Authorization: 'Basic ' + new Buffer(clientId + ':' + clientSecret).toString('base64') },
+    rejectUnauthorized: false,
+    json: true,
+    form: {
+      code: req.query.code,
+      redirect_uri: redirectUri,
+      grant_type: 'authorization_code'
     }
-)
+  };
+
+  // 1. Exchange authorization code for access token.
+  request.post(options, function(err, response, body) {
+    var guid = body.xoauth_yahoo_guid;
+    var accessToken = body.access_token;
+    var socialApiUrl = 'https://social.yahooapis.com/v1/user/' + guid + '/profile?format=json';
+
+    var options = {
+      url: socialApiUrl,
+      headers: { Authorization: 'Bearer ' + accessToken },
+      rejectUnauthorized: false,
+      json: true
+    };
+
+    // 2. Retrieve profile information about the current user.
+    request.get(options, function(err, response, body) {
+
+    // 3. Create a new user account or return an existing one
+
+      var user = {
+        guid: guid,
+        //email: body.profile.emails[0].handle,
+        profileImage: body.profile.image.imageUrl,
+        firstName: body.profile.givenName,
+        lastName: body.profile.familyName,
+        displayName: body.profile.nickname,
+        accessToken: accessToken
+      };
+      req.session.user = user;
+      res.redirect('http://mylocalwebsite.net/');
+
+    });
+  });
+});
