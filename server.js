@@ -98,19 +98,19 @@ app.get('/auth/yahoo/callback', function(req, res) {
 app.get('/teams', function(req, res) {
   console.log('you are here')
   var accessToken = req.query.accessToken
-  var game_key = 'nfl.l.215756'
+  var game_key = 'nfl'
   console.log(accessToken)
 
   yf.setUserToken(accessToken);
 
-  yf.league.standings(
+  yf.user.game_teams(
     game_key,
     function(err, data) {
       if (err)
         console.log('Oops: ', err);
       else
         leagueData = data
-        return res.json({ user: req.session.user, leagueData: leagueData });
+        return res.json(leagueData);
         }
       );      
 
