@@ -148,3 +148,21 @@ app.get('/rosters', function(req, res) {
         }
       )
 })
+
+app.get('/standings', function(req, res) {
+  var accessToken = req.query.accessToken
+  var league_key = req.query.league_key
+
+  yf.setUserToken(accessToken)
+
+  yf.team.roster(
+    league_key,
+    function(err, data) {
+      if (err)
+        console.log('Oops: ', err)
+      else
+        standingsData = data
+        return res.json(standingsData)
+        }
+      )
+})
