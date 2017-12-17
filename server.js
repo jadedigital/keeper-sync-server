@@ -155,7 +155,7 @@ app.get('/standings', function(req, res) {
 
   yf.setUserToken(accessToken)
 
-  yf.team.roster(
+  yf.league.standings(
     league_key,
     function(err, data) {
       if (err)
