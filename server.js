@@ -356,8 +356,9 @@ app.get('/mfl/export', function(req, res) {
   var host = req.query.host
   var cookie = req.query.cookie
   var qsData = qs.parse(req.query)
-  delete qs['host']
-  delete qs['cookie']
+  delete qsData['host']
+  delete qsData['cookie']
+  condole.log(qsData)
   var options = {
     url: 'https://' + host + '.myfantasyleague.com/2017/export',
     headers: { Cookie: 'MFL_USER_ID=' + cookie },
