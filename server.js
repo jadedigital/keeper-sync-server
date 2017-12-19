@@ -256,7 +256,6 @@ app.get('/auth/mfl', function(req, res) {
   // 1. Retrieve cookie.
   request.get(options, function(err, response, body) {
     var cookie = body.match(/"(\w+)"/)[1]
-    console.log(cookie)
     
     var options = {
       url: 'https://api.myfantasyleague.com/2017/export',
@@ -266,7 +265,11 @@ app.get('/auth/mfl', function(req, res) {
         JSON: 0
       }
     }
-    return res.json(response)
+    // 2. Retrieve host.
+    request.get(options, function(err, response, body) {
+      console.log(body)
+      return res.json(response)
+    })
   })
 
 
