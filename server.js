@@ -265,11 +265,11 @@ app.get('/auth/mfl', function(req, res) {
     }
     // 2. Retrieve host.
     request.get(options, function(err, response, body) {
-      console.log(body)
-      var userParams = qs.stringify({
+      console.log(JSON.parse(body))
+      var userParams = {
         cookie: cookie,
         leagues: body,
-      })
+      }
       return res.json(userParams)
     })
   })
