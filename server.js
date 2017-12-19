@@ -239,19 +239,17 @@ app.get('/auth/yahoo/refresh', function(req, res) {
 //////////////////////////////////////////////////////////////////
 
 app.get('/auth/mfl', function(req, res) {
-  var baseUrl = 'https://api.myfantasyleague.com/'
-  var year = 2017
+  var baseUrl = 'https://api.myfantasyleague.com/2017/login'
   var username = req.query.USERNAME
   var password = req.query.PASSWORD
 
-  var queryParams = qs.stringify({
-    USERNAME: username,
-    PASSWORD: password,
-    XML: 1
-  })
-  var fullUrl = baseUrl + year + '/login?' + queryParams
   var options = {
-    url: fullUrl
+    url: baseUrl,
+    qs: {
+      USERNAME: username,
+      PASSWORD: password,
+      XML: 1
+    }
   }
   // 1. Retrieve cookie.
   request.get(options, function(err, response, body) {
@@ -267,8 +265,12 @@ app.get('/auth/mfl', function(req, res) {
     }
     // 2. Retrieve host.
     request.get(options, function(err, response, body) {
-      console.log(body.leagues)
-      return res.json(body.leagues)
+      console.log(body)
+      var userParams = qs.stringify({
+        cookie: cookie,
+        leagues: body,
+      })
+      return res.json(userParams)
     })
   })
 
