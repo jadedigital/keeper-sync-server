@@ -250,12 +250,12 @@ app.get('/auth/mfl', function(req, res) {
     XML: 1
   })
   var fullUrl = baseUrl + year + '/login?' + queryParams
-  console.log(fullUrl)
   var options = {
     url: fullUrl
   }
   // 1. Retrieve cookie.
   request.get(options, function(err, response, body) {
+    console.log(body)
     var cookie = body.data.match(/"(\w+)"/)[1]
     
     var options = {
