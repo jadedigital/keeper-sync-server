@@ -287,6 +287,7 @@ app.get('/mfl/rosters', function(req, res) {
   }
 
   request.get(options, function(err, response, body) {
+    console.log(response)
     return res.json(body)
   })
 })
