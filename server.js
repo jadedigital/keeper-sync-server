@@ -248,7 +248,7 @@ app.get('/auth/mfl', function(req, res) {
     XML: 1
   })
   var fullUrl = baseUrl + year + '/login?' + queryParams
-
+  console.log(fullUrl)
   var options = {
     url: fullUrl
   }
