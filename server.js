@@ -242,8 +242,8 @@ app.get('/auth/mfl', function(req, res) {
   console.log(req)
   var baseUrl = 'https://api.myfantasyleague.com/'
   var year = 2017
-  var username = req.query.username
-  var password = req.query.password
+  var username = req.query.USERNAME
+  var password = req.query.PASSWORD
 
   var queryParams = qs.stringify({
     USERNAME: username,
