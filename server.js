@@ -262,7 +262,7 @@ app.get('/auth/mfl', function(req, res) {
       headers: { Cookie: 'MFL_USER_ID=' + cookie },
       qs: {
         TYPE: 'myleagues',
-        JSON: 0
+        JSON: 1
       }
     }
     // 2. Retrieve host.
