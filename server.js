@@ -267,8 +267,8 @@ app.get('/auth/mfl', function(req, res) {
     }
     // 2. Retrieve host.
     request.get(options, function(err, response, body) {
-      console.log(body)
-      return res.json(response)
+      console.log(body.leagues)
+      return res.json(body.leagues)
     })
   })
 
