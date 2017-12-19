@@ -255,8 +255,8 @@ app.get('/auth/mfl', function(req, res) {
   }
   // 1. Retrieve cookie.
   request.get(options, function(err, response, body) {
-    console.log(body)
-    var cookie = body.data.match(/"(\w+)"/)[1]
+    console.log(response.data)
+    var cookie = response.data.match(/"(\w+)"/)[1]
     
     var options = {
       url: 'https://api.myfantasyleague.com/2017/export',
