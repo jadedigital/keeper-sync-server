@@ -209,7 +209,7 @@ app.get('/auth/yahoo/refresh', function(req, res) {
       headers: { Authorization: 'Bearer ' + accessToken },
       rejectUnauthorized: false,
       json: true
-    };
+    }
 
     // 2. Retrieve profile information about the current user.
     request.get(options, function(err, response, body) {
@@ -239,7 +239,6 @@ app.get('/auth/yahoo/refresh', function(req, res) {
 //////////////////////////////////////////////////////////////////
 
 app.get('/auth/mfl', function(req, res) {
-  console.log(req)
   var baseUrl = 'https://api.myfantasyleague.com/'
   var year = 2017
   var username = req.query.USERNAME
@@ -257,6 +256,18 @@ app.get('/auth/mfl', function(req, res) {
   }
   // 1. Retrieve cookie.
   request.get(options, function(err, response, body) {
-    return res.json(body)
+    var cookie = body.data.match(/"(\w+)"/)[1]
+    
+    var options = {
+      url: 'https://api.myfantasyleague.com/2017/export',
+      headers: { Cookie: 'MFL_USER_ID=' + cookie },
+      qs: {
+        TYPE: 'myleagues',
+        JSON: 0
+      }
+    }
+    return res.json(response)
   })
+
+
 })
