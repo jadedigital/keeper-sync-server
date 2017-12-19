@@ -257,8 +257,6 @@ app.get('/auth/mfl', function(req, res) {
   }
   // 1. Retrieve cookie.
   request.get(options, function(err, response, body) {
-    console.log(response)
-    console.log(body)
     return res.json(body)
   })
 })
