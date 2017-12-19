@@ -273,6 +273,20 @@ app.get('/auth/mfl', function(req, res) {
       return res.json(userParams)
     })
   })
+})
 
+app.get('/mfl/rosters', function(req, res) {
+  var options = {
+    url: 'https://' + req.query.host + 'myfantasyleague.com/2017/export',
+    headers: { Cookie: 'MFL_USER_ID=' + req.query.cookie },
+    qs: {
+      TYPE: 'rosters',
+      L: req.query.leagueId,
+      JSON: 1
+    }
+  }
 
+  request.get(options, function(err, response, body) {
+    return res.json(body)
+  })
 })
