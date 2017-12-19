@@ -313,3 +313,61 @@ app.get('/mfl/players', function(req, res) {
     return res.json(body)
   })
 })
+
+app.get('/mfl/league', function(req, res) {
+  var options = {
+    url: 'https://' + req.query.host + '.myfantasyleague.com/2017/export',
+    headers: { Cookie: 'MFL_USER_ID=' + req.query.cookie },
+    qs: {
+      TYPE: 'league',
+      L: req.query.leagueId,
+      JSON: 1
+    }
+  }
+
+  request.get(options, function(err, response, body) {
+    if (err) {
+      console.log(err)
+    }
+    return res.json(body)
+  })
+})
+
+app.get('/mfl/standings', function(req, res) {
+  var options = {
+    url: 'https://' + req.query.host + '.myfantasyleague.com/2017/export',
+    headers: { Cookie: 'MFL_USER_ID=' + req.query.cookie },
+    qs: {
+      TYPE: 'leagueStandings',
+      L: req.query.leagueId,
+      JSON: 1
+    }
+  }
+
+  request.get(options, function(err, response, body) {
+    if (err) {
+      console.log(err)
+    }
+    return res.json(body)
+  })
+})
+
+app.get('/mfl/export', function(req, res) {
+  var host = req.query.host
+  var cookie = req.query.cookie
+  var qsData = qs.parse(req.query)
+  delete qs['host']
+  delete qs['cookie']
+  var options = {
+    url: 'https://' + host + '.myfantasyleague.com/2017/export',
+    headers: { Cookie: 'MFL_USER_ID=' + cookie },
+    qs: qsData
+  }
+
+  request.get(options, function(err, response, body) {
+    if (err) {
+      console.log(err)
+    }
+    return res.json(body)
+  })
+})
