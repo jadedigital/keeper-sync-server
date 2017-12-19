@@ -1,7 +1,6 @@
 var express = require('express')
 var session = require('express-session')
 var bodyParser = require('body-parser')
-var Axios = require('axios')
 var request = require('request')
 var cors = require('cors')
 var qs = require('querystring')
@@ -66,6 +65,7 @@ app.get('/auth/yahoo/callback', function(req, res) {
   request.post(options, function(err, response, body) {
     var guid = body.xoauth_yahoo_guid;
     var accessToken = body.access_token;
+    var refreshToken = body.refresh_token;
     var socialApiUrl = 'https://social.yahooapis.com/v1/user/' + guid + '/profile?format=json';
 
     var options = {
@@ -87,7 +87,8 @@ app.get('/auth/yahoo/callback', function(req, res) {
         firstName: body.profile.givenName,
         lastName: body.profile.familyName,
         displayName: body.profile.nickname,
-        accessToken: accessToken
+        accessToken: accessToken,
+        refreshToken: refreshToken
       })
       res.redirect('http://mylocalwebsite.net/#/callback/?' + userParams);
 
@@ -104,13 +105,16 @@ app.get('/teams', function(req, res) {
   yf.user.game_teams(
     game_key,
     function(err, data) {
-      if (err)
+      if (err) {
         console.log('Oops: ', err)
-      else
+        return res.json({error: 401})
+      }
+      else {
         teamData = data
         return res.json(teamData)
-        }
-      )
+      }
+    }
+  )
 })
 
 app.get('/leagues', function(req, res) {
@@ -122,13 +126,16 @@ app.get('/leagues', function(req, res) {
   yf.user.game_leagues(
     game_key,
     function(err, data) {
-      if (err)
+      if (err) {
         console.log('Oops: ', err)
-      else
+        return res.json({error: 401})
+      }
+      else {
         leagueData = data
         return res.json(leagueData)
-        }
-      )
+      }
+    }
+  )
 })
 
 app.get('/rosters', function(req, res) {
@@ -140,17 +147,21 @@ app.get('/rosters', function(req, res) {
   yf.team.roster(
     team_key,
     function(err, data) {
-      if (err)
+      if (err) {
         console.log('Oops: ', err)
-      else
+        return res.json({error: 401})
+      }
+      else {
         rosterData = data
         return res.json(rosterData)
-        }
-      )
+      }
+    }
+  )
 })
 
 app.get('/standings', function(req, res) {
   var accessToken = req.query.accessToken
+  var refreshToken = req.query.refreshToken
   var league_key = req.query.league_key
 
   yf.setUserToken(accessToken)
@@ -158,11 +169,92 @@ app.get('/standings', function(req, res) {
   yf.league.standings(
     league_key,
     function(err, data) {
-      if (err)
+      if (err) {
         console.log('Oops: ', err)
-      else
+        return res.json({error: 401})
+      }
+      else {
         standingsData = data
         return res.json(standingsData)
-        }
-      )
+      }
+    }
+  )
+})
+
+app.get('/auth/yahoo/refresh', function(req, res) {
+  console.log('Attempting to refresh token...')
+
+  var accessTokenUrl = 'https://api.login.yahoo.com/oauth2/get_token'
+  var options = {
+    url: accessTokenUrl,
+    headers: { Authorization: 'Basic ' + new Buffer(clientId + ':' + clientSecret).toString('base64') },
+    rejectUnauthorized: false,
+    json: true,
+    form: {
+      refresh_token: req.query.refreshToken,
+      redirect_uri: redirectUri,
+      grant_type: 'refresh_token'
+    }
+  }
+
+  // 1. Exchange authorization code for access token.
+  request.post(options, function(err, response, body) {
+    var guid = body.xoauth_yahoo_guid;
+    var accessToken = body.access_token;
+    var refreshToken = body.refresh_token;
+    var socialApiUrl = 'https://social.yahooapis.com/v1/user/' + guid + '/profile?format=json';
+
+    var options = {
+      url: socialApiUrl,
+      headers: { Authorization: 'Bearer ' + accessToken },
+      rejectUnauthorized: false,
+      json: true
+    };
+
+    // 2. Retrieve profile information about the current user.
+    request.get(options, function(err, response, body) {
+
+    // 3. Create a new user account or return an existing one
+
+      var userParams = qs.stringify({
+        guid: guid,
+        //email: body.profile.emails[0].handle,
+        profileImage: body.profile.image.imageUrl,
+        firstName: body.profile.givenName,
+        lastName: body.profile.familyName,
+        displayName: body.profile.nickname,
+        accessToken: accessToken,
+        refreshToken: refreshToken
+      })
+      res.json(userParams)
+
+    })
+  })
+})
+
+//////////////////////////////////////////////////////////////////
+//
+// MFL
+//
+//////////////////////////////////////////////////////////////////
+
+app.get('/auth/mfl', function(req, res) {
+  var baseUrl = 'https://api.myfantasyleague.com/'
+  var year = 2017 
+
+  var queryParams = qs.stringify({
+    USERNAME: req.query.username,
+    PASSWORD: req.query.password,
+    XML: 1
+  })
+  var fullUrl = baseUrl + year + '?' + queryParams
+
+  var options = {
+    url: fullUrl
+  }
+  // 1. Retrieve cookie.
+  request.get(options, function(err, response, body) {
+    console.log(response)
+    console.log(body)
+  })
 })
