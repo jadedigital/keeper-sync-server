@@ -355,7 +355,7 @@ app.get('/mfl/standings', function(req, res) {
 app.get('/mfl/export', function(req, res) {
   var host = req.query.host
   var cookie = req.query.cookie
-  var qsData = qs.parse(req.query)
+  var qsData = req.query
   console.log(req.query)
   delete qsData['host']
   delete qsData['cookie']
