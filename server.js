@@ -239,12 +239,15 @@ app.get('/auth/yahoo/refresh', function(req, res) {
 //////////////////////////////////////////////////////////////////
 
 app.get('/auth/mfl', function(req, res) {
+  console.log(req)
   var baseUrl = 'https://api.myfantasyleague.com/'
-  var year = 2017 
+  var year = 2017
+  var username = req.query.username
+  var password = req.query.password
 
   var queryParams = qs.stringify({
-    USERNAME: req.query.username,
-    PASSWORD: req.query.password,
+    USERNAME: username,
+    PASSWORD: password,
     XML: 1
   })
   var fullUrl = baseUrl + year + '/login?' + queryParams
