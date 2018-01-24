@@ -375,7 +375,6 @@ app.get('/mfl/export', function(req, res) {
 })
 
 app.get('/playernews', function(req, res) {
-  console.log('this is it')
   var host = req.query.host
   var league = req.query.league
   var player = req.query.player
