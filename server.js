@@ -357,10 +357,8 @@ app.get('/mfl/export', function(req, res) {
   var host = req.query.host
   var cookie = req.query.cookie
   var qsData = req.query
-  console.log(req.query)
   delete qsData['host']
   delete qsData['cookie']
-  console.log(qsData)
   var options = {
     url: 'https://' + host + '.myfantasyleague.com/2017/export',
     headers: { Cookie: 'MFL_USER_ID=' + cookie },
@@ -370,6 +368,7 @@ app.get('/mfl/export', function(req, res) {
   request.get(options, function(err, response, body) {
     if (err) {
       console.log(err)
+      return error
     }
     return res.json(body)
   })
@@ -377,5 +376,25 @@ app.get('/mfl/export', function(req, res) {
 
 app.get('/playernews', function(req, res) {
   console.log('this is it')
-  return res.json(news)
+  var host = req.query.host
+  var league = req.query.league
+  var player = req.query.player
+  var url = "https://" + host + ".myfantasyleague.com/2017/news_articles?L="+ league + "&PLAYERS=" + player + "&SOURCE=Rotoworld&DAYS=99"
+
+  request(url, function(error, response, html) {
+    if (error) {
+      console.log(error)
+      return error
+    }
+    var articles = []
+    var $ = cheerio.load(html)
+    $('#withmenus tr').each(function(index, element){
+      articles[index] = {}
+      articles[index]['rank'] = $(element).find('.rank').text()
+      articles[index]['headline'] = $(element).find('.headline').text()
+      articles[index]['timestamp'] = $(element).find('.timestamp').text()
+    })
+    return articles
+  })
+
 })
