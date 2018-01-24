@@ -389,12 +389,13 @@ app.get('/playernews', function(req, res) {
     var articles = []
     var $ = cheerio.load(html)
     $('#withmenus tr').each(function(index, element){
-      console.log(element)
       articles[index] = {}
       articles[index]['rank'] = $(element).find('.rank').text()
       articles[index]['headline'] = $(element).find('.headline').text()
       articles[index]['timestamp'] = $(element).find('.timestamp').text()
+      console.log(articles)
     })
+    console.log(articles)
     return articles
   })
 
