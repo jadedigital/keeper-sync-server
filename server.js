@@ -375,7 +375,7 @@ app.get('/mfl/export', function(req, res) {
   })
 })
 
-app.get('/mfl/playernews', function(req, res) {
+app.get('/playernews', function(req, res) {
   console.log('this is it')
   return res.json(news)
 })
