@@ -9,6 +9,8 @@ var OAuth = require('oauth')
 var timestamp = require('unix-timestamp')
 var oauthSignature = require('oauth-signature')
 var fantasySports = require('yahoo-fantasy-without-auth')
+var cheerio = require('cheerio')
+var jsonframe = require('jsonframe-cheerio')
 
 
 var yf = new fantasySports()
@@ -372,4 +374,25 @@ app.get('/mfl/export', function(req, res) {
     }
     return res.json(body)
   })
+})
+
+app.get('/playernews', function(req, res) {
+  var host = req.query.host
+  var league = req.query.league
+  var player = req.query.player
+  let $ = cheerio.load("https://" + host + ".myfantasyleague.com/2017/news_articles?L="+ league + "&PLAYERS=" + player + "&SOURCE=Rotoworld&DAYS=99")
+  jsonframe($)
+  let frame = {
+    "articles": {
+      _s: "tr",
+      _d: [{
+        "rank": ".rank",
+        "headline": ".headline",
+        "timestamp": ".timestamp"
+      }]
+    }
+  }
+  var news = $('#withmenus').scrape(frame)
+  console.log(news)
+  return res.json(news)
 })
