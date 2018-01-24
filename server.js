@@ -10,7 +10,6 @@ var timestamp = require('unix-timestamp')
 var oauthSignature = require('oauth-signature')
 var fantasySports = require('yahoo-fantasy-without-auth')
 var cheerio = require('cheerio')
-var jsonframe = require('jsonframe-cheerio')
 
 
 var yf = new fantasySports()
