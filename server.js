@@ -393,10 +393,8 @@ app.get('/playernews', function(req, res) {
       articles[index]['rank'] = $(element).find('.rank').text()
       articles[index]['headline'] = $(element).find('.headline').text()
       articles[index]['timestamp'] = $(element).find('.timestamp').text()
-      console.log(articles)
     })
-    console.log(articles)
-    return articles
+    return res.json(articles)
   })
 
 })
