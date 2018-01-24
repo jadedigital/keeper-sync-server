@@ -386,7 +386,7 @@ app.get('/playernews', function(req, res) {
       console.log(error)
       return error
     }
-    console.log('inside')
+    console.log(html)
     var articles = []
     var $ = cheerio.load(html)
     $('#withmenus tr').each(function(index, element){
