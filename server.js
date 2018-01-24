@@ -376,13 +376,14 @@ app.get('/mfl/export', function(req, res) {
   })
 })
 
-app.get('/playernews', function(req, res) {
+app.get('/mfl/playernews', function(req, res) {
+  console.log('this is it')
   var host = req.query.host
   var league = req.query.league
   var player = req.query.player
-  let $ = cheerio.load("https://" + host + ".myfantasyleague.com/2017/news_articles?L="+ league + "&PLAYERS=" + player + "&SOURCE=Rotoworld&DAYS=99")
-  jsonframe($)
-  let frame = {
+  var cheer = cheerio.load("https://" + host + ".myfantasyleague.com/2017/news_articles?L="+ league + "&PLAYERS=" + player + "&SOURCE=Rotoworld&DAYS=99")
+  jsonframe(cheer)
+  var frame = {
     "articles": {
       _s: "tr",
       _d: [{
@@ -392,7 +393,7 @@ app.get('/playernews', function(req, res) {
       }]
     }
   }
-  var news = $('#withmenus').scrape(frame)
+  var news = cheer('#withmenus').scrape(frame)
   console.log(news)
   return res.json(news)
 })
