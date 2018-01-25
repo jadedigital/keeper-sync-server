@@ -379,7 +379,6 @@ app.get('/playernews', function(req, res) {
   var league = req.query.league
   var player = req.query.player
   var url = "https://" + host + ".myfantasyleague.com/2017/news_articles?L="+ league + "&PLAYERS=" + player + "&SOURCE=Rotoworld&DAYS=99"
-  console.log(url)
   request(url, function(error, response, html) {
     if (error) {
       console.log(error)
@@ -391,8 +390,10 @@ app.get('/playernews', function(req, res) {
       articles[index] = {}
       articles[index]['rank'] = $(element).find('.rank').text()
       articles[index]['headline'] = $(element).find('.headline').text()
+      articles[index]['body'] = $(element).find('td:nth-child(3)').text()
       articles[index]['timestamp'] = $(element).find('.timestamp').text()
     })
+    console.log(articles)
     return res.json(articles)
   })
 
