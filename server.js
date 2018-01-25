@@ -393,7 +393,7 @@ app.get('/playernews', function(req, res) {
       articles[index]['body'] = $(element).find('td:nth-child(3)').text()
       articles[index]['timestamp'] = $(element).find('.timestamp').text()
     })
-    console.log(articles)
+    articles.splice(0, 1)
     return res.json(articles)
   })
 
