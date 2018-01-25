@@ -379,7 +379,7 @@ app.get('/playernews', function(req, res) {
   var league = req.query.league
   var player = req.query.player
   var url = "https://" + host + ".myfantasyleague.com/2017/news_articles?L="+ league + "&PLAYERS=" + player + "&SOURCE=Rotoworld&DAYS=99"
-
+  console.log(url)
   request(url, function(error, response, html) {
     if (error) {
       console.log(error)
