@@ -400,3 +400,36 @@ app.get('/playernews', function(req, res) {
   })
 
 })
+
+app.get('/playerstats', function(req, res) {
+  var host = req.query.host
+  var league = req.query.league
+  var player = req.query.player
+  var url = "https://" + host + ".myfantasyleague.com/2017/player?L="+ league + "&P=" + player
+  request(url, function(error, response, html) {
+    if (error) {
+      console.log(error)
+      return error
+    }
+    var stats = []
+    var $ = cheerio.load(html)
+    $('#player_stats_table tr.eventablerow, #player_stats_table tr.oddtablerow').each(function(index, element){
+      stats[index] = {}
+      stats[index]['week'] = $(element).find('.week').text()
+      stats[index]['points'] = $(element).find('.points').text()
+      stats[index]['vs'] = $(element).find('td:nth-child(3)').text()
+      stats[index]['stats'] = {}
+      stats[index]['stats']['1'] = $(element).find('td:nth-child(4)').text()
+      stats[index]['stats']['2'] = $(element).find('td:nth-child(5)').text()
+      stats[index]['stats']['3'] = $(element).find('td:nth-child(6)').text()
+      stats[index]['stats']['4'] = $(element).find('td:nth-child(7)').text()
+      stats[index]['stats']['5'] = $(element).find('td:nth-child(8)').text()
+      stats[index]['stats']['6'] = $(element).find('td:nth-child(9)').text()
+      stats[index]['stats']['7'] = $(element).find('td:nth-child(10)').text()
+      stats[index]['stats']['8'] = $(element).find('td:nth-child(11)').text()
+      stats[index]['stats']['9'] = $(element).find('td:nth-child(12)').text()
+    })
+    return res.json(stats)
+  })
+
+})
