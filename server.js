@@ -391,6 +391,8 @@ app.get('/playernews', function(req, res) {
       articles[index]['rank'] = $(element).find('.rank').text()
       articles[index]['headline'] = $(element).find('.headline').text()
       articles[index]['body'] = $(element).find('td:nth-child(3)').text()
+      articles[index]['link'] = $(element).find('td:nth-child(3) a').attr('href')
+      articles[index]['source'] = $(element).find('td:nth-child(3) a').text()
       articles[index]['timestamp'] = $(element).find('.timestamp').text()
     })
     articles.splice(0, 1)
