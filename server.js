@@ -396,8 +396,7 @@ app.get('/playernews', function(req, res) {
     })
     $('#cp1_pnlStatControls .pb').each(function(index, element){
       var newIndex = index + 1
-      console.log(index)
-      console.log(newIndex)
+      articles[newIndex] = {}
       articles[newIndex]['headline'] = $(element).find('.report').text()
       articles[newIndex]['body'] = $(element).find('.impact').text()
       articles[newIndex]['link'] = $(element).find('.info .source a').attr('href')
