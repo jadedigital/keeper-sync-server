@@ -383,7 +383,9 @@ app.get('/playernews', function(req, res) {
       return error
     }
     var articles = []
-    var $ = cheerio.load(html)
+    var $ = cheerio.load(html, {
+      normalizeWhitespace: true,
+    })
     $('#cp1_pnlPlayer .pp .playernews').each(function(index, element){
       if (index === 0) {
         articles[index] = {}
