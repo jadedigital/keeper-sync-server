@@ -375,10 +375,8 @@ app.get('/mfl/export', function(req, res) {
 })
 
 app.get('/playernews', function(req, res) {
-  var host = req.query.host
-  var league = req.query.league
   var player = req.query.player
-  var url = "https://" + host + ".myfantasyleague.com/2017/news_articles?L="+ league + "&PLAYERS=" + player + "&SOURCE=Rotoworld&DAYS=99"
+  var url = 'http://www.rotoworld.com/recent/nfl/' + player
   request(url, function(error, response, html) {
     if (error) {
       console.log(error)
@@ -386,16 +384,14 @@ app.get('/playernews', function(req, res) {
     }
     var articles = []
     var $ = cheerio.load(html)
-    $('#withmenus tr').each(function(index, element){
+    $('#cp1_pnlStatControls .pb').each(function(index, element){
       articles[index] = {}
-      articles[index]['rank'] = $(element).find('.rank').text()
-      articles[index]['headline'] = $(element).find('.headline').text()
-      articles[index]['body'] = $(element).find('td:nth-child(3)').text()
-      articles[index]['link'] = $(element).find('td:nth-child(3) a').attr('href')
-      articles[index]['source'] = $(element).find('td:nth-child(3) a').text()
-      articles[index]['timestamp'] = $(element).find('.timestamp').text()
+      articles[index]['headline'] = $(element).find('.report').text()
+      articles[index]['body'] = $(element).find('.impact').text()
+      articles[index]['link'] = $(element).find('.info .source a').attr('href')
+      articles[index]['source'] = $(element).find('.info .source a').text()
+      articles[index]['timestamp'] = $(element).find('.info .date').text()
     })
-    articles.splice(0, 1)
     return res.json(articles)
   })
 
