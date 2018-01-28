@@ -395,11 +395,12 @@ app.get('/playernews', function(req, res) {
       }
     })
     $('#cp1_pnlStatControls .pb').each(function(index, element){
-      articles[index + 1]['headline'] = $(element).find('.report').text()
-      articles[index + 1]['body'] = $(element).find('.impact').text()
-      articles[index + 1]['link'] = $(element).find('.info .source a').attr('href')
-      articles[index + 1]['source'] = $(element).find('.info .source a').text()
-      articles[index + 1]['timestamp'] = $(element).find('.info .date').text()
+      var newIndex = index + 1
+      articles[newIndex]['headline'] = $(element).find('.report').text()
+      articles[newIndex]['body'] = $(element).find('.impact').text()
+      articles[newIndex]['link'] = $(element).find('.info .source a').attr('href')
+      articles[newIndex]['source'] = $(element).find('.info .source a').text()
+      articles[newIndex]['timestamp'] = $(element).find('.info .date').text()
     })
     return res.json(articles)
   })
