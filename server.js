@@ -384,13 +384,22 @@ app.get('/playernews', function(req, res) {
     }
     var articles = []
     var $ = cheerio.load(html)
+    $('#cp1_pnlPlayer .pp .playernews').each(function(index, element){
+      if (index === 0) {
+        articles[index] = {}
+        articles[index]['headline'] = $(element).find('.report').text()
+        articles[index]['body'] = $(element).find('.impact').text()
+        articles[index]['link'] = $(element).find('.info .source a').attr('href')
+        articles[index]['source'] = $(element).find('.info .source a').text()
+        articles[index]['timestamp'] = $(element).find('.impact .date').text()
+      }
+    })
     $('#cp1_pnlStatControls .pb').each(function(index, element){
-      articles[index] = {}
-      articles[index]['headline'] = $(element).find('.report').text()
-      articles[index]['body'] = $(element).find('.impact').text()
-      articles[index]['link'] = $(element).find('.info .source a').attr('href')
-      articles[index]['source'] = $(element).find('.info .source a').text()
-      articles[index]['timestamp'] = $(element).find('.info .date').text()
+      articles[index + 1]['headline'] = $(element).find('.report').text()
+      articles[index + 1]['body'] = $(element).find('.impact').text()
+      articles[index + 1]['link'] = $(element).find('.info .source a').attr('href')
+      articles[index + 1]['source'] = $(element).find('.info .source a').text()
+      articles[index + 1]['timestamp'] = $(element).find('.info .date').text()
     })
     return res.json(articles)
   })
