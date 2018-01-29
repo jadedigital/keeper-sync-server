@@ -411,10 +411,8 @@ app.get('/playernews', function(req, res) {
 })
 
 app.get('/playerstats', function(req, res) {
-  var host = req.query.host
-  var league = req.query.league
   var player = req.query.player
-  var url = "https://" + host + ".myfantasyleague.com/2017/player?L="+ league + "&P=" + player
+  var url = 'http://www.rotoworld.com/log/nfl/' + player
   request(url, function(error, response, html) {
     if (error) {
       console.log(error)
@@ -422,21 +420,22 @@ app.get('/playerstats', function(req, res) {
     }
     var stats = []
     var $ = cheerio.load(html)
-    $('#player_stats_table tr.eventablerow, #player_stats_table tr.oddtablerow').each(function(index, element){
-      stats[index] = {}
-      stats[index]['week'] = $(element).find('.week').text()
-      stats[index]['points'] = $(element).find('.points').text()
-      stats[index]['vs'] = $(element).find('td:nth-child(3)').text()
-      stats[index]['stats'] = {}
-      stats[index]['stats']['1'] = $(element).find('td:nth-child(7)').text()
-      stats[index]['stats']['2'] = $(element).find('td:nth-child(8)').text()
-      stats[index]['stats']['3'] = $(element).find('td:nth-child(9)').text()
-      stats[index]['stats']['4'] = $(element).find('td:nth-child(10)').text()
-      stats[index]['stats']['5'] = $(element).find('td:nth-child(11)').text()
-      stats[index]['stats']['6'] = $(element).find('td:nth-child(12)').text()
-      stats[index]['stats']['7'] = $(element).find('td:nth-child(13)').text()
-      stats[index]['stats']['8'] = $(element).find('td:nth-child(14)').text()
-      stats[index]['stats']['9'] = $(element).find('td:nth-child(15)').text()
+    $('#cp1_pnlStatControls tr').each(function(index, element){
+      if (index === 1) {
+        stats[index] = []
+        $(element).find('th').each(function(i, el){
+          stats[index][i] = {}
+          stats[index][i]['value'] = $(element).text()
+          stats[index][i]['colspan'] = $(element).attr('colspan')
+        })
+      }
+      else if (index > 1) {
+        stats[index] = []
+        $(element).find('td').each(function(i, el){
+          stats[index][i] = {}
+          stats[index][i]['value'] = $(element).text()
+        })
+      }
     })
     return res.json(stats)
   })
