@@ -422,18 +422,20 @@ app.get('/playerstats', function(req, res) {
     var $ = cheerio.load(html)
     $('#cp1_pnlStatControls tr').each(function(index, element){
       if (index === 1) {
-        stats[index] = []
+        var newIndex = index - 1
+        stats[newIndex] = []
         $(element).find('th').each(function(i, el){
-          stats[index][i] = {}
-          stats[index][i]['value'] = $(el).text()
-          stats[index][i]['colspan'] = $(el).attr('colspan')
+          stats[newIndex][i] = {}
+          stats[newIndex][i]['value'] = $(el).text()
+          stats[newIndex][i]['colspan'] = $(el).attr('colspan')
         })
       }
       else if (index > 1) {
-        stats[index] = []
+        var newIndex = index - 1
+        stats[newIndex] = []
         $(element).find('td').each(function(i, el){
-          stats[index][i] = {}
-          stats[index][i]['value'] = $(el).text()
+          stats[newIndex][i] = {}
+          stats[newIndex][i]['value'] = $(el).text()
         })
       }
     })
