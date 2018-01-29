@@ -425,15 +425,15 @@ app.get('/playerstats', function(req, res) {
         stats[index] = []
         $(element).find('th').each(function(i, el){
           stats[index][i] = {}
-          stats[index][i]['value'] = $(element).text()
-          stats[index][i]['colspan'] = $(element).attr('colspan')
+          stats[index][i]['value'] = $(el).text()
+          stats[index][i]['colspan'] = $(el).attr('colspan')
         })
       }
       else if (index > 1) {
         stats[index] = []
         $(element).find('td').each(function(i, el){
           stats[index][i] = {}
-          stats[index][i]['value'] = $(element).text()
+          stats[index][i]['value'] = $(el).text()
         })
       }
     })
