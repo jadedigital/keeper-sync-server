@@ -393,7 +393,7 @@ app.get('/mfl/chat', function(req, res) {
     var xml = body
     var data = convert.xml2json(xml, {compact: true, spaces: 2});
     console.log(data)
-    return res.json(data.messages)
+    return res.send(data)
   })
 })
 
