@@ -18,6 +18,7 @@
     "passport": "^0.4.0",
     "passport-yahoo-oauth2": "^0.2.6",
     "request": "^2.69.0",
-    "unix-timestamp": "^0.2.0"
+    "unix-timestamp": "^0.2.0",
+    "xml-js": "^1.6.2"
   }
 }
