@@ -10,6 +10,7 @@ var timestamp = require('unix-timestamp')
 var oauthSignature = require('oauth-signature')
 var fantasySports = require('yahoo-fantasy-without-auth')
 var cheerio = require('cheerio')
+var convert = require('xml-js');
 
 
 var yf = new fantasySports()
@@ -371,6 +372,28 @@ app.get('/mfl/export', function(req, res) {
       return error
     }
     return res.json(body)
+  })
+})
+
+app.get('/mfl/chat', function(req, res) {
+  var host = req.query.host
+  var cookie = req.query.cookie
+  var league = req.query.league
+  var options = {
+    url: 'https://' + host + '.myfantasyleague.com/fflnetdynamic2017/' + league + '_chat.xml',
+    headers: { Cookie: 'MFL_USER_ID=' + cookie },
+  }
+
+  request.get(options, function(err, response, body) {
+    if (err) {
+      console.log(err)
+      return error
+    }
+    console.log(body)
+    var xml = body
+    var data = convert.xml2json(xml, {compact: true, spaces: 2});
+    console.log(data)
+    return res.json(data)
   })
 })
 
