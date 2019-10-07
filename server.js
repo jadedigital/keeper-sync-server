@@ -241,7 +241,8 @@ app.get('/auth/yahoo/refresh', function(req, res) {
 //////////////////////////////////////////////////////////////////
 
 app.get('/auth/mfl', function(req, res) {
-  var baseUrl = 'https://api.myfantasyleague.com/2017/login'
+  var season = req.query.season
+  var baseUrl = 'https://api.myfantasyleague.com/' + season + '/login'
   var username = req.query.USERNAME
   var password = req.query.PASSWORD
 
@@ -258,7 +259,7 @@ app.get('/auth/mfl', function(req, res) {
     var cookie = body.match(/"(\w+)"/)[1]
     
     var options = {
-      url: 'https://api.myfantasyleague.com/2017/export',
+      url: 'https://api.myfantasyleague.com/' + season + '/export',
       headers: { Cookie: 'MFL_USER_ID=' + cookie },
       qs: {
         TYPE: 'myleagues',
@@ -358,10 +359,12 @@ app.get('/mfl/export', function(req, res) {
   var host = req.query.host
   var cookie = req.query.cookie
   var qsData = req.query
+  var season = req.query.season
   delete qsData['host']
   delete qsData['cookie']
+  delete qsData['season']
   var options = {
-    url: 'https://' + host + '.myfantasyleague.com/2017/export',
+    url: 'https://' + host + '.myfantasyleague.com/' + season + '/export',
     headers: { Cookie: 'MFL_USER_ID=' + cookie },
     qs: qsData
   }
