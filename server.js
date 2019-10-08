@@ -382,6 +382,7 @@ app.get('/mfl/chat', function(req, res) {
   var host = req.query.host
   var cookie = req.query.cookie
   var league = req.query.league
+  var season = req.query.season
   var options = {
     url: 'https://' + host + '.myfantasyleague.com/fflnetdynamic' + season + '/' + league + '_chat.xml',
     headers: { Cookie: 'MFL_USER_ID=' + cookie },
