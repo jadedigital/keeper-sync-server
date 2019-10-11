@@ -378,6 +378,29 @@ app.get('/mfl/export', function(req, res) {
   })
 })
 
+app.get('/mfl/import', function(req, res) {
+  var host = req.query.host
+  var cookie = req.query.cookie
+  var qsData = req.query
+  var season = req.query.season
+  delete qsData['host']
+  delete qsData['cookie']
+  delete qsData['season']
+  var options = {
+    url: 'https://' + host + '.myfantasyleague.com/' + season + '/import',
+    headers: { Cookie: 'MFL_USER_ID=' + cookie },
+    qs: qsData
+  }
+
+  request.post(options, function(err, response, body) {
+    if (err) {
+      console.log(err)
+      return error
+    }
+    return res.json(body)
+  })
+})
+
 app.get('/mfl/chat', function(req, res) {
   var host = req.query.host
   var cookie = req.query.cookie
